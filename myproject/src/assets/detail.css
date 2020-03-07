@@ -1,0 +1,126 @@
+.detail{
+    text-align: left;
+}
+
+/* 主图：轮播 */
+.detail .mint-swipe {
+    width: 100%;
+    margin:0 auto;
+    overflow: hidden;
+    height: 414px;
+  }
+  .detail .mint-swipe-item img {
+    width: 100%;
+  }
+  .detail .mainTop{
+      position: relative;
+  }
+.detail .goback,
+.detail .cart{
+    width: 36px;
+    height: 36px;
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    z-index: 10;
+    background: rgba(0,0,0,0.2);
+    border-radius: 50%;
+    text-align: center;
+}
+.detail .goback img{
+    width: 34%;
+    margin-top: 6px;
+}
+.detail .cart{
+    left: 366px;
+}
+.detail .mui-icon-extra-cart{
+    margin-top: 6px;
+    color: #fff;
+}
+
+/* 主图信息 */
+.introduce{
+    padding: 14px 16px;
+}
+.introduce h4{
+    font-size: 16px;
+    line-height: 24px;
+    border-bottom:1px solid #d4d4d4;
+}
+.introduce .price{
+    margin-top: 12px;
+    font-size: 20px;
+    color: #fd7800;
+}
+.introduce .changeCount{
+    border-bottom:1px solid #d4d4d4;
+}
+.introduce .changeCount input,
+.introduce .changeCount button{
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    color:#5e5e5e;
+}
+.introduce .counts .sold{
+    float: right;
+    padding-right: 4px;
+}
+.introduce .serve{
+    font-size: 12px;
+    margin-top: 10px;
+}
+.introduce .serve span{
+    margin-right: 14px;
+}
+
+/* 按钮 */
+.introduce .buyNow,
+.introduce .addCart{
+    padding: 10px 16px;
+}
+.introduce .addCart{
+    margin-right: 10px;
+}
+
+/* 详情介绍 */
+.detailTitle{
+    text-align: center;
+}
+.detailTitle span{
+    color: #ddd;
+}
+.detailTitle h5{
+    line-height: 24px;
+    color: #4d4d4d;
+}
+
+
+/* 底部固定按钮 */
+.mui-bar .bottomBtn{
+    text-align: center;
+    height: 100%;
+}
+.mui-bar .bottomBtn .buy,
+.mui-bar .bottomBtn .add{
+    padding: 0;
+    display: inline-block;
+    height: 100%;
+    width: 50%;
+    border: none;
+    border-radius: 0;
+    font-size: 16px;
+    color: #fff;
+}
+.mui-bar .bottomBtn .buy{
+    background: #fec230;
+}
+.mui-bar .bottomBtn .add{
+    background: #fd7800;
+}
+
+.productDetail img{
+    width: 100%;
+}

@@ -1,0 +1,138 @@
+/* 导航--标题 */
+header{
+    position: relative;
+}
+header .title{
+    height: 90px;
+    background: #fd7800;
+    color:#fff;
+    font-size: 24px;
+    font-family: '微软雅黑',Arial, Helvetica, sans-serif;
+    line-height: 70px;
+}
+header .title .light{
+    opacity: 0.5;
+}
+
+/* 导航--搜索框 */
+header .search .myIpt{
+    width: 85%;
+    height: 60px;
+    background: #fff;
+    border-radius: 30px;
+    box-shadow: 0 2px 5px 3px #ffc7e021;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -30px;
+    padding-left: 30px;
+    box-sizing: border-box;
+    font-size: 16px;
+    border: none;
+}
+/* 设置输入框占位符的字体颜色，兼容 */
+.search .myIpt::-webkit-input-placeholder{
+    color: #fea34e;
+}
+.search .myIpt::-moz-input-placeholder{
+    color: #fea34e;
+}
+.search .myIpt::-ms-input-placeholder{
+    color: #fea34e;
+}
+
+.search{
+    position: relative;
+}
+.search img{
+    width: 26px;
+    position: absolute;
+    right: 54px;
+    top: -12px;
+}
+
+/* banner图 */
+ .index .mint-swipe {
+    width: 90%;
+    margin:0 auto;
+    margin-top: 46px;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 200px;
+  }
+  .index .mint-swipe-item img {
+    width: 100%;
+  }
+
+/* 图标列表 */
+.iconList{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+}
+.iconList .iconItem{
+    flex:1;
+}
+.iconList .iconItem img{
+    width: 50%;
+}
+
+/* 每日推荐 */
+.product{
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+.product h2{
+    text-align: left;
+    font-size: 18px;
+    font-weight: normal;
+    color: #fd7800;
+    position: relative;
+}
+.product h2 span{
+    display: inline-block;
+    width: 4px;
+    height: 14px;
+    background: #fd7800;
+    margin-right: 8px;
+}
+.product .hotList{
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-bottom: 60px;
+}
+.product .hotList .hotItem{
+    position: relative;
+    width: 48%;
+    height: 92px;
+    overflow: hidden;
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+.product .hotList .hotItem img{
+    width: 100%;
+}
+.product .hotList .hotItem p{
+    position: absolute;
+    top: 10px;
+    right: 6px;
+    color: #fff;
+    font-size: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.411);
+    background: rgba(0, 0, 0, 0.137);
+    border-radius: 2px;
+    padding: 0 4px;
+}
+.product .hotList .hotItem p span{
+    font-size: 10px;
+}
+
+/* 底部导航 */
+.mui-bar.mui-bar-tab{
+    height: 60px;
+    background: #fff;
+    box-shadow: 0 -1px 4px 2px rgba(0, 0, 0, 0.055);
+}

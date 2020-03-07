@@ -1,0 +1,20 @@
+/* 公共样式 */
+*{
+    padding:0;
+    margin: 0;
+}
+ul{
+    list-style: none;
+}
+input{
+    border: none;
+    outline: none;
+}
+.bgWhite{
+    background: #fff;
+}
+.clearfix::after{
+    content: '';
+    display: block;
+    clear: both;
+}
