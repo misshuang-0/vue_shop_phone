@@ -37,13 +37,15 @@ export default {
 		toPersonal(){
 			// console.log(sessionStorage.getItem('uname'))
 			// console.log(sessionStorage.getItem('avatar'))
+			// 如果用户名已存在
 			if(sessionStorage.getItem('uname')){
+				// 如果已经在个人中心，终止函数
 				if(this.$route.path == '/personal'){
 					return;
-				}else{
+				}else{	//跳转到个人中心
 					this.$router.push('/personal');
 				}
-			}else{
+			}else{	//用户名不存在，跳转到登录页面
 				this.$router.push('/login');
 			}
 		},

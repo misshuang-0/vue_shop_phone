@@ -40,11 +40,6 @@ axios.defaults.withCredentials = true;
 // 将axios配置为vue实例对象
 Vue.prototype.axios = axios;
 
-// 引入qs模块
-import qs from "qs";
-// 将qs配置为Vue实例属性
-Vue.prototype.qs = qs;
-
 Vue.config.productionTip = false
 
 // 导入 MUI 的样式表， 和 Bootstrap 用法没有差别

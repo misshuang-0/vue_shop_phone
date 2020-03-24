@@ -12,8 +12,9 @@
             </div>
         </header>
 
-        <!-- 购物车列表 -->
+        <!-- 购物车列表 动态获取 -->
         <div class="cartList bgWhite" :style="myList">
+            <!-- 顶部全选栏 -->
             <div class="checkAll">
                 <div class="all">
                     <input @click="allchecked" class="allIpt" type="checkbox" v-model="allCheck" name="" id="mycheckAll">
@@ -25,7 +26,7 @@
             <!-- 列表项 -->
             <div class="cartItem" v-for="(item,i) of list" :key="i">
                 <div>
-                    <input @click='isChecked' class="myIpt" :data-i="i" v-model="item.check" :id="`myIpt${i}`" type="checkbox">
+                    <input :ref="`check${i}`" @click='isChecked' class="myIpt" :data-i="i" v-model="item.check" :id="`myIpt${i}`" type="checkbox">
                     <label :for="`myIpt${i}`"></label>
                 </div>
                 <div class="img">
@@ -73,24 +74,25 @@
 </template>
 
 <script>
-import {Toast} from 'mint-ui';
+import {Toast} from 'mint-ui';          //提示信息插件
 import {MessageBox} from 'mint-ui';     //确认框
 export default {
     data(){
         return {
-            list:[],
-            count:[],       //商品对应下标的数量
+            list:[],        //商品列表
+            count:[],       //存储商品对应下标的数量
             tip:{
-                display:'none',
+                display:'none',     //提示内容，默认隐藏
             },
             noProduct:{
-                display:'none',
+                display:'none',     //购物车为空时显示，默认隐藏
             },
             myList:{
-                display:'block'
-            },
-            allCheck:false,
-            totalPrice:0
+                display:'block'     //商品列表，默认显示
+            },      
+            allCheck:false,     //全选框，默认未选中
+            totalPrice:0,        //合计金额：默认0
+            checkArr: [],       // 存储被选中的商品下标
         }
     },
     methods:{
@@ -118,11 +120,17 @@ export default {
                     count:this.count[i]
                 }
             }).then(res=>{
-                // this.cartList();
-                // 让 input 的数据等于 count[i]
-                // 问题：不能让数量随着count的变化而变化？？？
+                // 遍历商品列表，查询哪些下标的商品被选中
+                for(var i = 0;i < this.list.length; i ++){
+                    if(this.list[i].check){
+                        this.checkArr.push(i);
+                    }
+                }
+                // 重新获取商品列表
                 this.cartList();
             })
+            
+            
         },
         // 获取商品列表
         cartList(){
@@ -146,44 +154,58 @@ export default {
                     // 为购物车列表的每一项添加check属性，初始值为：false
                     for(var item of res.data){
                         item.check = false;
-                        
                     }
                     // 将请求的列表结果赋值给data中的list
                     this.list = res.data;
+                    
+                    // 如果被选中的商品数组不为空
+                    if(this.checkArr.length > 0){
+                        // 遍历商品列表，查询哪些下标的商品被选中
+                        this.checkArr.forEach((i)=>{
+                            this.list[i].check = true;
+                        })
+                    }
+                    // 将选中的商品数组清空
+                    this.checkArr = [];
+
                     // console.log(this.list);
                     // 将列表的每一个商品的数量值添加到data 中的count数组，获取所有商品的数量
                     for(var item of this.list){
                         this.count.push(item.count);
                     }
-                    // 将合计金额归为默认值
+                    // console.log(this.list)
+                    // 重新计算合计金额
                     this.getTotal();
                 })
             })
         },
-        // 判断是否选中,合计金额
+        // 判断是否选中
         isChecked(e){
+            // 获取当前操作的复选框的 下标
             var i = e.target.dataset.i;
+            // 更新商品列表中 i下标商品的 check 值
             this.list[i].check = e.target.checked;
             // 选中的数量
             var num = 0;
             // 未选中的数量
             var count = 0;
             for(var i = 0;i < this.list.length; i ++){
-                // 如果选中，计算选中的金额
+                // 如果选中 选中的数量 ++
                 if(this.list[i].check){
-                    num ++;
+                    num ++;     
                 };
-                // 如果没有选中，count ++
+                // 如果没有选中，未选中的数量 ++
                 if(!this.list[i].check){
-                    count ++;
+                    count ++;       
                 }
             }
             // 如果选中的数量等于 list的总数量，全选也被选中
             if(num == this.list.length){
                 this.allCheck = true;
-            }else{
+            }else{  //反之，全选未被选中
                 this.allCheck = false;
             }
+            // 计算合计金额
             this.getTotal();
         },
         // 计算合计金额
@@ -198,7 +220,7 @@ export default {
                 // 如果选中，计算选中的金额
                 if(this.list[i].check){
                     num ++;
-                    // 求价格总和
+                    // 求价格总和 = 选中商品的价格 * 选中商品的数量
                     this.totalPrice += this.list[i].price * this.list[i].count;
                 };
                 // 如果没有选中，count ++
@@ -218,6 +240,7 @@ export default {
             // 遍历商品列表，找出选中的商品
             for (var item of this.list){
                 if(item.check){
+                    // 将选中商品的cid存入checkId数组
                     checkId.push(item.cid);
                 }
             };
@@ -232,15 +255,17 @@ export default {
             }
             // console.log(checkId);
             
+            // 确认框提示
             MessageBox.confirm('',{
                 title:'提示',
                 message:'即将删除该商品，是否继续？',
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
             }).then(action =>{
-                // console.log('删除')
+                // 在此回调函数中，执行删除请求
                 // 向服务器发送请求，删除选中的商品
                 this.axios.get('http://127.0.0.1:3000/del',{
+                    // 将要删除的商品cid列表发送给服务端
                     params:{
                         checkId: checkId
                     }
@@ -261,8 +286,6 @@ export default {
                     }
                     // 并重新加载列表
                     this.cartList();
-                    // console.log('下面是删除后的列表')
-                    // console.log(this.list)
                 });
             }).catch(error=>{
                 if(error == 'cancel'){
@@ -272,16 +295,19 @@ export default {
             
             
         },
-        // 全选
+        // 点击全选事件
         allchecked(e){
+            // 将商品列表的每一项的 check 值 等于 全选的 checked 值
             for(var item of this.list){
                 item.check = e.target.checked;
             }
+            // 计算合计金额
             this.getTotal();
         },
         
     },
     created(){
+        // 获取购物车列表
         this.cartList();
     }
 }

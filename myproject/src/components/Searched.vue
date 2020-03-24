@@ -47,18 +47,18 @@ export default{
             list:[],
             pno:0,
             show:{
-                display:'none'
+                display:'none'  //加载更多，默认隐藏
             },
             tip:{
-                display:'none'
+                display:'none'  //提示框，默认隐藏
             }
         }
     },
     methods:{
-        // 获取通过搜索传参过来的关键词
+        // 获取通过搜索传参过来的关键词，进行模糊搜索
         getMore(){
-            var key = this.$route.query.key;
-            this.pno ++;
+            var key = this.$route.query.key;    //首页搜索框发来的关键词
+            this.pno ++;    
             // console.log(key)
             this.axios.get('http://127.0.0.1:3000/mysearch',{
                 params:{
@@ -74,8 +74,7 @@ export default{
                     this.tip.display = 'block';
                     // 并结束下面的操作
                     return;
-                    // 反之，显示商品
-                }else{
+                }else{  // 反之，存入商品列表信息,展示商品
                     this.list = this.list.concat(res.data.data);
                 }
 
@@ -94,6 +93,7 @@ export default{
         }
     },
     created(){
+        // 获取商品列表
         this.getMore();
     }
 }

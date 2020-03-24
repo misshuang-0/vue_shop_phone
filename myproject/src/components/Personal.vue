@@ -9,14 +9,16 @@
                 个人中心
                 <span>·</span>
                 <span class="light">·</span>
+                <!-- 头像 -->
                 <div class="headPic">
+                    <!-- 如果用户登录了 显示用户的头像 -->
                     <div v-if="uname" class="img">
                         <img :src="`http://127.0.0.1/${avatar}`" alt="">
                     </div>
+                    <!-- 没登录，显示默认头像 -->
                     <div v-else class="img">
                         <img src="../img/默认头像.jpg" alt="">
                     </div>
-                    <!-- <input class="changeHead" type="file" value="更换头像" id=""> -->
                     <p>{{uname || '暂未登录'}}</p>
                 </div>
             </div>
@@ -70,7 +72,7 @@
             </div>
         </div>
 
-        <!-- 为登录显示提示框 -->
+        <!-- 未登录显示提示框 -->
         <div class="bgWhite" :class="{'myTip':myTip}">
             <p>您还没有登录哦~</p>
             <p>请登录后再来！O(∩_∩)O</p>
@@ -92,25 +94,31 @@ export default {
         }
     },
     methods:{
+        // 判断用户是否登录
         isLogin(){
             this.axios.get('http://127.0.0.1:3000/personal').then(res=>{
                 if(res.data.code < 0){
+                    // 显示提示框，提示登录
                     this.myTip = true;
                 }else{
                     // console.log(res.data);
+                    // 获取用户名 和用户头像
                     this.uname = res.data.data[0].uname;
                     this.avatar = res.data.data[0].avatar;
                 }
             })
         },
+        // 跳转登录页面
         toLogin(){
                 this.$router.push('/login');
         },
+        // 跳转注册页面
         toRegister(){
                 this.$router.push('/register');
         },
     },
     created(){
+        // 判断用户是否登录
         this.isLogin();
     }
 }

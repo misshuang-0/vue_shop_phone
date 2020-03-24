@@ -27,11 +27,13 @@ export default {
         }
     },
     methods:{
+        // 返回登录界面
         returnLog(){
             this.$router.push('/login');
         },
+        // 注册
         register(){
-            // 验证输入的内容
+            // 验证用户名，为2-10位 中文
             var regU = /^[\w\u4e00-\u9fa5]{2,10}$/i;
             if(!regU.test(this.uname)){
                 Toast({
@@ -40,6 +42,7 @@ export default {
                 });
                 return;
             }
+            // 密码 6-12位 数字字母大小写下划线
             var regP = /^\w{6,12}$/;
             if(!regP.test(this.upwd)){
                 Toast({
@@ -48,6 +51,7 @@ export default {
                 });
                 return;
             }
+            // 验证邮箱
             var regE = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
             if(!regE.test(this.email)){
                 Toast({
@@ -56,6 +60,7 @@ export default {
                 });
                 return;
             }
+            // 验证手机号码
             var regPh = /^1[3456789]\d{9}$/;
             if(!regPh.test(this.phone)){
                 Toast({
@@ -64,6 +69,7 @@ export default {
                 });
                 return;
             }
+            // 如果都验证通过，向服务器发送请求
             var data = `uname=${this.uname}&upwd=${this.upwd}&email=${this.email}&phone=${this.phone}`;
             this.axios.post('http://127.0.0.1:3000/register',data,{
                 'Content-Type':'application/x-www-form-urlencoded'
@@ -73,23 +79,23 @@ export default {
                     message: res.data.msg,
                     duration:1000
                 });
+                // 如果注册成功，自动登录
                 if(res.data.code == 1){
                     var data = `uname=${this.uname}&upwd=${this.upwd}`;
                     this.axios.post('http://127.0.0.1:3000/login',data,{
                         'Content-Type':'application/x-www-form-urlencoded'
                     }).then(res=>{
-                        console.log(res.data);
+                        // console.log(res.data);
+                        // sessionStorage 存入uname avatar
                         sessionStorage.setItem('uname',this.uname);
                         sessionStorage.setItem('avatar',res.data.data[0].avatar);
-                        console.log(sessionStorage.getItem('avatar'));
+                        // console.log(sessionStorage.getItem('avatar'));
                     })
+                    // 跳转到首页
                     this.$router.push('/')
                 }
             })
         }
-    },
-    created(){
-        
     }
 }
 </script>

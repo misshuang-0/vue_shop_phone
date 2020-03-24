@@ -9,6 +9,7 @@
                 <span>·</span>
                 <span class="light">·</span>
             </div>
+            <!-- 搜索框 -->
             <div class="search">
                 <input class="myIpt" type="text" v-model="key" placeholder="冬季上新">
                 <!-- 放大镜 -->
@@ -16,7 +17,7 @@
             </div>
         </header>
 
-        <!-- banner图 -->
+        <!-- banner图 swipe插件 -->
         <mt-swipe :auto="3000">
             <mt-swipe-item v-for="(img,i) of bannerList" :key='i'>
                 <img :src="img.imgUrl" alt="">
@@ -43,7 +44,7 @@
             </router-link>
         </div>
 
-        <!-- 每日推荐 -->
+        <!-- 每日推荐 动态获取 -->
         <div class="product">
             
             <h2><span></span>每日推荐</h2>
@@ -61,29 +62,30 @@
 </template>
 
 <script>
-import {Toast} from 'mint-ui';
+import {Toast} from 'mint-ui';  //提示信息插件
 export default {
     data(){
         return {
-            bannerList:[],
-            key:'',
-            dayList:[]
+            bannerList:[],      //轮播图列表
+            key:'',             //搜索关键词
+            dayList:[]          //每日推荐列表
         }
     },
     created(){
-        this.swipeImg();
-        this.getDayList();
+        this.getSwipeImg();     //获取轮播图列表
+        this.getDayList();      //获取每日推荐列表
     },
     methods:{
-        swipeImg(){
+        //获取轮播图列表
+        getSwipeImg(){
             this.axios.get('http://127.0.0.1:3000/swipeImg').then(res =>{
                 // console.log(res.data);
                 this.bannerList = res.data;
             })
         },
-        // 搜索商品
+        //获取每日推荐列表
         scProduct(){
-            // 验证关键词不能为空
+            // 验证关键词不能为空，否则终止函数
             var reg = /^\s*$/;
             if(reg.test(this.key)){
                 Toast({
@@ -92,6 +94,7 @@ export default {
                 });
                 return;
             }
+            // 跳转到搜索的页面，并携带搜索的关键词一起
             this.$router.push({
                 path:'/searched',
                 query: {key:this.key}

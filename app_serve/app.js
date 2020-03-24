@@ -1,6 +1,4 @@
-const multer = require('multer');
 const fs = require('fs');
-var upload = multer({dest:'upload/'});
 const session = require('express-session');
 // 1.引入express 模块
 const express = require('express');
@@ -29,23 +27,22 @@ server.use(bodyParser.urlencoded({
 const mysql = require('mysql');
 // 创建连接池
 var pool = mysql.createPool({
-    host: '127.0.0.1',
-    port: '3306',
-    user: 'root',
-    password: '',
-    database: 'xz',
-    connectionLimit: 20
+    host: '127.0.0.1',      //主机名
+    port: '3306',           //端口号
+    user: 'root',           //用户名
+    password: '',           //密码
+    database: 'xz',         //数据库
+    connectionLimit: 20     //连接数量
 });
 // 引入cors跨域模块
 const cors = require('cors');
 
 // 在服务器端配置允许来自8080端口的所有请求
 server.use(cors({
+    // 允许跨域的链接
     origin:[
         'http://127.0.0.1:8080',
         'http://localhost:8080',
-        'http://localhost:8081',
-        'http://127.0.0.1:8081',
     ],
     credentials: true,
 }))
@@ -57,8 +54,6 @@ server.use(express.static('public'));
 server.post('/login',(req,res)=>{
     var uname = req.body.uname;
     var upwd = req.body.upwd;
-    // console.log('用户名：'+uname);
-    // console.log('密码：'+upwd);
     if(!uname){
         res.send({
             code: -1,
@@ -159,6 +154,7 @@ server.get('/isLogin',(req,res)=>{
 // 个人项目(myproject)：个人中心
 server.get('/personal',(req,res)=>{
     var uid = req.session.uid;
+    // 获取用户uid,用户名，头像
     var sql = 'SELECT uid,uname,avatar FROM xz_user WHERE uid=?';
     pool.query(sql,[uid],(err,result)=>{
         if(err) throw err;
@@ -235,19 +231,6 @@ server.get('/swipeImg',(req,res)=>{
     ];
     res.send(imgs);
 }) 
-
-// 九宫格图片
-server.get('/grid',(req,res)=>{
-    var gridImg = [
-        {id:1,title:'新闻资讯',url:'http://127.0.0.1:3000/img/grid/menu1.png'},
-        {id:2,title:'商品',url:'http://127.0.0.1:3000/img/grid/menu2.png'},
-        {id:3,title:'点餐',url:'http://127.0.0.1:3000/img/grid/menu3.png'},
-        {id:4,title:'位置',url:'http://127.0.0.1:3000/img/grid/menu4.png'},
-        {id:5,title:'搜索',url:'http://127.0.0.1:3000/img/grid/menu5.png'},
-        {id:6,title:'电话',url:'http://127.0.0.1:3000/img/grid/menu6.png'},
-    ];
-    res.send(gridImg);
-})
 
 // 新闻列表
 server.get('/news',(req,res)=>{
@@ -366,7 +349,7 @@ server.post('/delCart',(req,res)=>{
 
 // 删除购物车多个商品
 server.get('/del',(req,res)=>{
-    var checkId = req.query.checkId;
+    var checkId = req.query.checkId;    //获取要删除的商品cid列表
     // console.log(checkId);
     pool.query('DELETE FROM my_cart WHERE cid IN('+checkId+')',(err,result)=>{
         if(err) throw err;
@@ -496,8 +479,9 @@ server.post('/myAddCart',(req,res)=>{
 
 // 个人项目(myproject): 改变购物车商品数量
 server.get('/changeNum',(req,res)=>{
-    var cid = req.query.cid;
-    var count = req.query.count;
+    var cid = req.query.cid;    //获取的客户端 购物车商品cid
+    var count = req.query.count;    //获取的客户端该商品数量
+    // 更新该商品的数量
     pool.query('UPDATE my_cart SET count=? WHERE cid=?',[count,cid],(err,result)=>{
         if(err) throw err;
         res.send({
@@ -507,27 +491,11 @@ server.get('/changeNum',(req,res)=>{
     })
 })
 
-// 小程序：完成上传图片
-server.post('/uploadFile',upload.single('mypic'),(req,res)=>{
-    var src = req.file.originalname;
-    var i = src.lastIndexOf('.');
-    var suff = src.substring(i);
-    var time = new Date().getTime();
-    var dest = time + Math.floor(Math.random() * 10000) + suff;
-    var newFile = __dirname + '/public/upload/' + dest;
-    // 移动文件到临时文件夹
-    fs.renameSync(req.file.path,newFile);
-    res.send({
-        code:1,
-        msg:'上传成功！'
-    })
-})
-
 // 个人项目(myproject): 商品搜索
 server.get('/mysearch',(req,res)=>{
     var pno = req.query.pno;
     var pageCount = parseInt(req.query.pageCount);
-    var key = req.query.key;
+    var key = req.query.key;    //客户端发来的关键词
     if(!pno){
         pno = 1;
     }
@@ -535,14 +503,17 @@ server.get('/mysearch',(req,res)=>{
         pageCount = 4;
     }
     var pno = (pno-1) * pageCount;
+    // 通过商品标题含有该关键词的 商品信息
     var sql = "SELECT pid,title,subtitle,price,listPic FROM xz_product WHERE title LIKE concat('%',?,'%') LIMIT ?,?";
     pool.query(sql,[key,pno,pageCount],(err,result)=>{
         if(err) throw err;
         if(result.length > 0){
             var data = result;
+            // 查询搜索出的商品总数量
             var sql = `SELECT count(pid) FROM xz_product WHERE title LIKE concat('%','${key}','%')`;
             pool.query(sql,(err,result)=>{
                 if(err) throw err;
+                // 将总数量存入 myCount
                 var myCount = {};
                 myCount = result[0];
                 res.send({

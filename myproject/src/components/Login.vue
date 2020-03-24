@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import {Toast} from 'mint-ui'
+import {Toast} from 'mint-ui';   //提示信息插件
 export default {
     data(){
         return {
@@ -24,6 +24,7 @@ export default {
         }
     },
     methods:{
+        // 点击登录按钮 发送登录请求
         myLogin(){
             this.axios.post('http://127.0.0.1:3000/login','uname='+this.uname+'&upwd='+this.upwd,{'Content-Type':'application/x-www-form-urlencoded'}).then(res=>{
                 // console.log(res.data);
@@ -33,14 +34,14 @@ export default {
                 });
                 
                 if(res.data.code == 1){
+                    // 在sessionStorage中存储用户名和用户头像 可运用于：底部导航栏页面跳转等
                     sessionStorage.setItem('uname',this.uname);
                     sessionStorage.setItem('avatar',res.data.data[0].avatar);
-                    // console.log(sessionStorage.getItem('uname'));
-                    // console.log(sessionStorage.getItem('avatar'));
-                    this.$router.push('/');
+                    this.$router.push('/');     //跳转到首页
                 }
             })
         },
+        // 跳转到注册页面
         toRegister(){
             this.$router.push('/register');
         }

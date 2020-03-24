@@ -10,10 +10,11 @@
             <img class="bannerImg" src="../img/list-banner.png" alt="">
         </div>
 
-        <!-- 商品列表 -->
+        <!-- 商品列表 动态获取 -->
         <div class="productList bgWhite">
             <div class="showAll">
-                <router-link v-for="(item,i) of list" :key="i" :to="`/detail/${item.pid}`">
+                <!-- 点击商品列表项，跳转到指定商品pid 的详情页 -->
+                <router-link v-for="item of list" :key="item.pid" :to="`/detail/${item.pid}`">
                     <div class="productItem">
                         <div class="itemImg">
                         <img :src="`http://localhost/${item.listPic}`" alt="">
@@ -36,13 +37,14 @@
 export default{
     data(){
         return {
-            list:[],
-            pno:0
+            list:[],        //商品列表
+            pno:0           //页码
         }
     },
     methods:{
         // 加载更多页面
         loadMore(e){
+            // 首次加载是页面1
             this.pno++;
             this.axios.get('http://127.0.0.1:3000/mylist',{
                 params:{
@@ -50,6 +52,7 @@ export default{
                 }
             }).then(res=>{
                 // console.log(res.data.data[0]);
+                // 存储商品列表信息
                 this.list = this.list.concat(res.data.data[0]);
                 // 当this.list的列表长度和数据库存储的商品数量相同时，隐藏加载按钮
                 if(this.list.length == res.data.data[1]['count(pid)']){
@@ -62,6 +65,7 @@ export default{
         }
     },
     created(){
+        // 获取商品列表
         this.loadMore();
     }
 }
